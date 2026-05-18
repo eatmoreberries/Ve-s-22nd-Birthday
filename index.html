@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>10 Things I Love About You</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:      #8B1A1A;
+      --red-dark: #6a1212;
+      --red-bg:   #7a1616;
+      --cream:    #f0ebe0;
+      --cream2:   #e8e2d5;
+      --tan:      #d8d0c0;
+      --brown:    #5c4f3a;
+      --dusty:    #c9a09a;
+      --beige:    #c9b99a;
+      --text:     #2a2420;
+      --muted:    #5c4f3a;
+      --page-w:   420px;
+      --page-h:   594px;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: #bdb5a8;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(180,160,140,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(140,120,100,0.3) 0%, transparent 60%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      padding: 2rem 1rem 3rem;
+      gap: 1.2rem;
+    }
+
+    #cover-scene {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .cover-book {
+      width: var(--page-w);
+      height: var(--page-h);
+      background: var(--red);
+      border-radius: 4px 16px 16px 4px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 6rem 3rem 8rem;
+      box-shadow:
+        -10px 10px 32px rgba(0,0,0,0.5),
+        inset 6px 0 14px rgba(0,0,0,0.22),
+        inset -1px 0 0 rgba(255,255,255,0.06);
+      user-select: none;
+      transition: transform 0.25s cubic-bezier(.2,.8,.4,1), box-shadow 0.25s;
+      overflow: hidden;
+    }
+    .cover-book::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 22px;
+      background: linear-gradient(to right, rgba(0,0,0,0.35), transparent);
+      border-radius: 4px 0 0 4px;
+      pointer-events: none;
+    }
+    .cover-book::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 38px,
+        rgba(0,0,0,0.04) 38px, rgba(0,0,0,0.04) 39px
+      );
+      pointer-events: none;
+    }
+    .cover-book:hover {
+      transform: rotate(-1deg) translateY(-4px);
+      box-shadow: -16px 16px 40px rgba(0,0,0,0.55), inset 6px 0 14px rgba(0,0,0,0.22);
+    }
+
+    .cover-title {
+      text-align: right;
+      color: white;
+      font-family: 'DM Serif Display', serif;
+      line-height: 0.95;
+      position: relative;
+      z-index: 1;
+    }
+    .cover-title .t-num    { font-size: 85px; display: block; letter-spacing: -4px; }
+    .cover-title .t-things { font-size: 44px; display: block; }
+    .cover-title .t-i      { font-size: 44px; display: block; }
+    .cover-title .t-love   { font-size: 44px; display: block; }
+    .cover-title .t-about  { font-size: 44px; display: block; }
+
+    .cover-photo { position: absolute; bottom: 5%; left: 8%; width: 300px; z-index: 3; }
+    .cover-photo img { width: 100%; display: block; }
+
+    .cover-sub {
+      position: absolute;
+      bottom: 1.8rem; left: 0; right: 0;
+      text-align: center;
+      color: rgba(255,255,255,0.55);
+      font-size: 12px;
+      font-style: italic;
+      font-family: 'DM Serif Display', serif;
+      letter-spacing: 0.5px;
+      z-index: 1;
+    }
+    .cover-hint {
+      color: var(--brown);
+      font-size: 11px;
+      font-style: italic;
+      letter-spacing: 0.5px;
+      opacity: 0.8;
+    }
+
+    #book-scene { display: none; flex-direction: column; align-items: center; gap: 1rem; }
+    #book-scene.open { display: flex; }
+
+    /* ── 3D BOOK WRAPPER ── */
+    .book-3d-wrap {
+      perspective: 2200px;
+      perspective-origin: 50% 48%;
+    }
+
+    .book-3d {
+      transform-style: preserve-3d;
+      transform: rotateX(4deg) rotateY(-2deg);
+      transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+      position: relative;
+    }
+    .book-3d:hover {
+      transform: rotateX(2deg) rotateY(0deg);
+    }
+
+    /* open-book animation */
+    @keyframes bookOpen {
+      0%   { transform: rotateX(18deg) rotateY(-28deg) scale(0.88); opacity: 0; }
+      60%  { transform: rotateX(5deg)  rotateY(-3deg)  scale(1.01); opacity: 1; }
+      100% { transform: rotateX(4deg)  rotateY(-2deg)  scale(1);    opacity: 1; }
+    }
+    .book-3d.opening { animation: bookOpen 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+    /* page-turn flash overlay */
+    @keyframes pageTurn {
+      0%   { opacity: 0.18; }
+      100% { opacity: 0; }
+    }
+    .page-turn-flash {
+      position: absolute; inset: 0; z-index: 99;
+      background: linear-gradient(to right, transparent 40%, rgba(255,255,255,0.35) 65%, transparent 100%);
+      pointer-events: none;
+      opacity: 0;
+    }
+    .page-turn-flash.flash { animation: pageTurn 0.35s ease-out forwards; }
+
+    /* spine shadow between pages */
+    .spine-shadow {
+      position: absolute;
+      left: 50%; top: 0; bottom: 0;
+      width: 28px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right,
+        rgba(0,0,0,0.18) 0%,
+        rgba(0,0,0,0.06) 40%,
+        rgba(0,0,0,0.06) 60%,
+        rgba(0,0,0,0.18) 100%
+      );
+      z-index: 6; pointer-events: none;
+    }
+
+    /* bottom edge thickness illusion */
+    .book-edge-bottom {
+      width: calc(var(--page-w) * 2 + 6px);
+      height: 10px;
+      background: linear-gradient(to bottom, #d5c9b8, #bfb3a2);
+      border-radius: 0 0 6px 6px;
+      transform: rotateX(-90deg) translateZ(-1px);
+      transform-origin: top center;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.28);
+    }
+
+    .spread {
+      display: none;
+      width: calc(var(--page-w) * 2 + 6px);
+      height: var(--page-h);
+      position: relative;
+      gap: 6px;
+    }
+    .spread.active { display: flex; }
+
+    .spread-wide {
+      display: none;
+      width: calc(var(--page-w) * 2 + 6px);
+      height: var(--page-h);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 36px rgba(0,0,0,0.38);
+      background: var(--cream);
+    }
+    .spread-wide.active { display: block; }
+
+    .page {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      padding: 1.6rem 1.4rem;
+    }
+    .page-l {
+      background: var(--cream);
+      border-radius: 16px 3px 3px 16px;
+      box-shadow:
+        -10px 10px 30px rgba(0,0,0,0.35),
+        inset -8px 0 18px rgba(0,0,0,0.09),
+        inset 0 -2px 0 rgba(0,0,0,0.04);
+    }
+    .page-r {
+      background: var(--cream2);
+      border-radius: 3px 16px 16px 3px;
+      box-shadow:
+        10px 10px 30px rgba(0,0,0,0.35),
+        inset 8px 0 18px rgba(0,0,0,0.09),
+        inset 0 -2px 0 rgba(0,0,0,0.04);
+    }
+    /* subtle page curl bottom-right on right page */
+    .page-r::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 40px; height: 40px;
+      background: radial-gradient(ellipse at bottom right, rgba(0,0,0,0.10) 0%, transparent 70%);
+      pointer-events: none;
+      border-radius: 0 0 16px 0;
+      z-index: 4;
+    }
+    .page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 28px,
+        rgba(0,0,0,0.028) 28px, rgba(0,0,0,0.028) 29px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+    .spread > .page-l::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 10px;
+      background: linear-gradient(to right, rgba(0,0,0,0.12), transparent);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .spread-wide .spine-line {
+      position: absolute;
+      left: 50%; top: 0; bottom: 0;
+      width: 8px;
+      background: linear-gradient(to right, rgba(0,0,0,0.10), transparent);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* ── AMBIENT MUSIC PLAYER (outside book) ── */
+    #ambient-player {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 40px;
+      padding: 8px 18px 8px 10px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.14);
+    }
+    #ambient-player.visible { display: flex; }
+
+    #amb-disc {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: conic-gradient(var(--red) 0deg, #c47a7a 120deg, #8B1A1A 240deg, var(--red) 360deg);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+      transition: transform 0.2s;
+      position: relative;
+    }
+    #amb-disc::after {
+      content: '';
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #bdb5a8;
+      position: absolute;
+    }
+    #amb-disc:hover { transform: scale(1.08); }
+
+    @keyframes discSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    #amb-disc.spinning { animation: discSpin 4s linear infinite; }
+    #amb-disc.spinning::after { animation: discSpin 4s linear infinite reverse; }
+
+    #amb-info { display: flex; flex-direction: column; gap: 1px; }
+    #amb-title { font-size: 10px; font-weight: 700; color: var(--brown); font-family: 'Space Mono', monospace; }
+    #amb-artist { font-size: 8px; color: var(--muted); font-family: 'Space Mono', monospace; opacity: 0.8; }
+
+    #amb-bars {
+      display: flex; align-items: flex-end; gap: 2px; height: 16px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    #amb-bars.active { opacity: 1; }
+    #amb-bars span {
+      width: 2.5px; background: var(--dusty); border-radius: 99px;
+    }
+    @keyframes ambBar {
+      0%, 100% { transform: scaleY(0.3); }
+      50%       { transform: scaleY(1);   }
+    }
+    #amb-bars span:nth-child(1) { height: 10px; animation: ambBar 0.7s ease-in-out infinite 0.0s; }
+    #amb-bars span:nth-child(2) { height: 14px; animation: ambBar 0.7s ease-in-out infinite 0.1s; }
+    #amb-bars span:nth-child(3) { height: 8px;  animation: ambBar 0.7s ease-in-out infinite 0.2s; }
+    #amb-bars span:nth-child(4) { height: 12px; animation: ambBar 0.7s ease-in-out infinite 0.15s; }
+    #amb-bars span:nth-child(5) { height: 6px;  animation: ambBar 0.7s ease-in-out infinite 0.05s; }
+
+    .thing-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: right;
+      color: #333;
+      margin-bottom: 0.7rem;
+      position: relative;
+      z-index: 2;
+    }
+    .thing-tag .n { color: var(--red); font-size: 30px; vertical-align: middle; font-family: 'DM Serif Display', serif; }
+
+    .love-head {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      position: relative;
+      z-index: 2;
+    }
+    .love-body {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      line-height: 1.7;
+      position: relative;
+      z-index: 2;
+    }
+
+    .star {
+      position: absolute;
+      color: var(--dusty);
+      opacity: 0.62;
+      font-size: 18px;
+      line-height: 1;
+      z-index: 1;
+    }
+    .tape {
+      position: absolute;
+      background: rgba(255,228,120,0.52);
+      border: 1px solid rgba(200,165,60,0.28);
+      z-index: 10;
+    }
+
+    .photo-frame {
+      background: #111;
+      border: 3px solid #fff;
+      box-shadow: 2px 3px 10px rgba(0,0,0,0.38);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      z-index: 3;
+    }
+    .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-frame .ph-icon { font-size: 40px; color: #555; }
+
+    .caption-word {
+      display: inline-block;
+      background: var(--cream);
+      border: 1px solid var(--beige);
+      padding: 3px 10px;
+      font-size: 9px;
+      font-family: 'Space Mono', monospace;
+      border-radius: 2px;
+    }
+
+    .page-back {
+      flex: 1;
+      height: 100%;
+      background: var(--red-bg);
+      border-radius: 3px 16px 16px 3px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 2rem;
+      box-shadow: 8px 8px 24px rgba(0,0,0,0.35);
+    }
+    .back-text {
+      color: rgba(255,255,255,0.88);
+      text-align: center;
+      font-size: 15px;
+      font-family: 'DM Serif Display', serif;
+      line-height: 2;
+    }
+    .close-btn {
+      margin-top: 2rem;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: white;
+      padding: 8px 22px;
+      border-radius: 24px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+    }
+    .close-btn:hover { background: rgba(255,255,255,0.22); }
+
+    .nav-row { display: flex; align-items: center; gap: 1.2rem; }
+    .nav-btn {
+      background: var(--brown);
+      color: var(--cream);
+      border: none;
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+      line-height: 1;
+    }
+    .nav-btn:hover:not(:disabled) { background: var(--red); transform: scale(1.08); }
+    .nav-btn:disabled { background: #b0a898; cursor: default; opacity: 0.6; }
+    .page-counter {
+      font-size: 11px;
+      color: var(--brown);
+      font-style: italic;
+      min-width: 52px;
+      text-align: center;
+    }
+
+    .wide-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.6rem 2.4rem 1.2rem;
+    }
+    .wide-thing-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      text-align: center;
+      margin-bottom: 0.8rem;
+    }
+    .wide-thing-tag .n { color: var(--red); font-size: 30px; font-family: 'DM Serif Display', serif; }
+
+    .dot-rule {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0.8rem 0 0.4rem;
+    }
+    .dot-rule::before, .dot-rule::after { content: ''; flex: 1; height: 1px; background: var(--beige); }
+    .dot-rule span { width: 5px; height: 5px; border-radius: 50%; background: var(--dusty); }
+
+    .bubble-left, .bubble-right {
+      padding: 9px 13px;
+      font-size: 9px;
+      font-family: 'Space Mono', monospace;
+      max-width: 86%;
+      position: relative;
+      z-index: 2;
+    }
+    .bubble-right {
+      background: var(--red);
+      border-radius: 14px 14px 4px 14px;
+      color: white;
+      align-self: flex-end;
+    }
+
+    .intro-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pg-stamp {
+      position: absolute;
+      bottom: 1rem; right: 1.2rem;
+      font-size: 8px;
+      color: var(--beige);
+      font-family: 'Space Mono', monospace;
+      z-index: 2;
+    }
+
+    .vn-bubble:hover { background: #fdf6f6 !important; }
+    .vn-bubble.playing { background: #fdf0f0 !important; border-color: var(--dusty) !important; }
+
+    @keyframes vnPulse {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(1.8); }
+    }
+    .vn-bubble.playing .vn-bar {
+      animation: vnPulse 0.5s ease-in-out infinite;
+    }
+    .vn-bubble.playing .vn-bar:nth-child(1)  { animation-delay: 0.00s; }
+    .vn-bubble.playing .vn-bar:nth-child(2)  { animation-delay: 0.07s; }
+    .vn-bubble.playing .vn-bar:nth-child(3)  { animation-delay: 0.14s; }
+    .vn-bubble.playing .vn-bar:nth-child(4)  { animation-delay: 0.21s; }
+    .vn-bubble.playing .vn-bar:nth-child(5)  { animation-delay: 0.07s; }
+    .vn-bubble.playing .vn-bar:nth-child(6)  { animation-delay: 0.28s; }
+    .vn-bubble.playing .vn-bar:nth-child(7)  { animation-delay: 0.14s; }
+    .vn-bubble.playing .vn-bar:nth-child(8)  { animation-delay: 0.00s; }
+    .vn-bubble.playing .vn-bar:nth-child(9)  { animation-delay: 0.21s; }
+    .vn-bubble.playing .vn-bar:nth-child(10) { animation-delay: 0.07s; }
+    .vn-bubble.playing .vn-bar:nth-child(11) { animation-delay: 0.14s; }
+    .vn-bubble.playing .vn-bar:nth-child(12) { animation-delay: 0.28s; }
+    .vn-bubble.playing .vn-bar { background: var(--red) !important; }
+
+    .sticky-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 0.8rem 0;
+      position: relative;
+      z-index: 2;
+    }
+    .sticky {
+      padding: 10px 10px 14px;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      line-height: 1.6;
+      color: #3a3020;
+      border-radius: 2px;
+      position: relative;
+      box-shadow: 2px 3px 8px rgba(0,0,0,0.13);
+    }
+    .sticky::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: rgba(0,0,0,0.06);
+      border-radius: 0 0 2px 2px;
+    }
+    .sticky-yellow { background: #fff9c4; }
+    .sticky-pink   { background: #ffd6d6; }
+    .sticky-blue   { background: #d6eaff; }
+    .sticky-green  { background: #d6f5e3; }
+    .sticky-label {
+      font-size: 7px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: rgba(0,0,0,0.35);
+      margin-bottom: 4px;
+    }
+
+    .receipt-block {
+      background: #fffef8;
+      border: 1px dashed var(--beige);
+      border-radius: 3px;
+      padding: 10px 12px;
+      margin: 0.7rem 0;
+      position: relative;
+      z-index: 2;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--muted);
+      line-height: 2;
+    }
+    .receipt-block .r-title {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--red);
+      text-align: center;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .receipt-block .r-divider { border: none; border-top: 1px dashed var(--beige); margin: 5px 0; }
+    .receipt-block .r-row { display: flex; justify-content: space-between; }
+
+    .letter-content {
+      max-height: 130px; 
+      overflow-y: auto;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--beige) transparent;
+    }
+    .letter-content::-webkit-scrollbar { width: 4px; }
+    .letter-content::-webkit-scrollbar-track { background: transparent; }
+    .letter-content::-webkit-scrollbar-thumb { background: var(--beige); border-radius: 4px; }
+
+    /* Music Player */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.18); opacity: 0; }
+    }
+
+    #playerCard {
+      background: white;
+      border: 1.5px solid var(--beige);
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 2px 4px 14px rgba(0,0,0,0.08);
+      transform: rotate(-1.5deg);
+      cursor: pointer;
+      transition: transform 0.2s;
+      position: relative;
+      z-index: 2;
+    }
+    #playerCard:hover { transform: rotate(-0.5deg) scale(1.02); }
+
+    #vinylDisc {
+      width: 72%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: repeating-radial-gradient(circle, #1a1a1a 0px, #2a2a2a 3px, #1a1a1a 4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      transition: all 0.3s;
+    }
+    #vinylDisc.spinning { animation: spin 4s linear infinite; }
+
+    #playOverlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.15);
+      transition: opacity 0.2s;
+    }
+    #playBtn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    #pulseRing {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.7);
+      opacity: 0;
+    }
+    #pulseRing.pulsing { animation: pulse-ring 1.2s ease-out infinite; }
+  </style>
+</head>
+<body>
+
+<div id="cover-scene">
+  <div class="cover-book" onclick="openBook()">
+    <div class="cover-title">
+      <span class="t-num">Chapter 22:</span>
+      <span class="t-things">born</span>
+      <span class="t-i">to be</span>
+      <span class="t-love">loved</span>
+      <span class="t-about">(by me:D)</span>
+    </div>
+    <div class="cover-photo"><img src="images/images_1.png" alt="sticker"></div>
+    <div class="cover-sub">for you, on your special day.</div>
+  </div>
+  <div class="cover-hint">✦ klik cover untuk membuka ✦</div>
+</div>
+
+<div id="book-scene">
+
+  <!-- AMBIENT MUSIC PLAYER -->
+  <div id="ambient-player">
+    <div id="amb-disc" onclick="toggleAmbient()"></div>
+    <div id="amb-info">
+      <div id="amb-title">Shape of My Heart</div>
+      <div id="amb-artist">Backstreet Boys</div>
+    </div>
+    <div id="amb-bars">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- 3D BOOK WRAPPER -->
+  <div class="book-3d-wrap">
+    <div class="book-3d" id="book3d" style="transform-style:preserve-3d;">
+      <!-- page turn flash overlay -->
+      <div class="page-turn-flash" id="pageTurnFlash"></div>
+      <!-- spine shadow -->
+      <div class="spine-shadow"></div>
+  <div class="spread active" id="s0">
+    <div class="page page-l">
+      <div class="intro-block">
+        <div style="font-size:52px;margin-bottom:1.2rem;">📖</div>
+        <p style="font-family:'DM Serif Display',serif;font-size:13px;color:var(--muted);line-height:2;font-style:italic;">
+          This little book holds<br>
+          ten of the countless reasons<br>
+          why you mean the world to me.
+        </p>
+        <div style="margin:1.4rem auto;width:46%;height:1px;background:var(--beige);"></div>
+        <p style="font-size:9px;color:#8a7a6a;letter-spacing:0.5px;">made especially for you 💛</p>
+      </div>
+      <span class="star" style="font-size:24px;bottom:15%;left:12px;">★</span>
+      <div class="pg-stamp">p. 1</div>
+    </div>
+    <div class="page page-r">
+      <div class="thing-tag">#thing<span class="n">1</span></div>
+      <div class="love-head">i love how you showed up that day</div>
+      <div style="position:relative;margin:0.6rem 0;">
+        <div class="photo-frame" style="width:100%;height:190px;border-radius:2px;">
+          <img src="images/Images_2.jpeg" alt="foto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        </div>
+        <div class="tape" style="top:-7px;left:50%;transform:translateX(-50%) rotate(-1deg);width:64px;height:14px;border-radius:2px;"></div>
+      </div>
+      <div class="receipt-block">
+        <div class="r-title">☕ competition day</div>
+        <hr class="r-divider">
+        <div class="r-row"><span>tidur</span><span>3 jam</span></div>
+        <div class="r-row"><span>pengalaman ku</span><span>1 bulan</span></div>
+        <div class="r-row"><span>kamu dateng buat</span><span>nemenin</span></div>
+        <hr class="r-divider">
+        <div class="r-row"><span>malah ikut dilombain</span><span>😭</span></div>
+        <div class="r-row" style="font-weight:700;color:var(--red);"><span>tetep nenangin aku</span><span>✓</span></div>
+      </div>
+      <div class="love-body" style="text-align:right;font-size:8px;margin-top:4px;">
+        technically kita lawan.<br>tapi kamu malah sibuk mastiin aku nggak panik.
+      </div>
+      <div class="pg-stamp">p. 2</div>
+    </div>
+  </div>
+
+  <!-- SPREAD 1 -->
+  <div class="spread" id="s1">
+    <div class="page page-l">
+      <div class="thing-tag">#thing<span class="n">2</span></div>
+      <div class="love-head">i love how people feel safe around you</div>
+      <div style="position:relative;height:210px;margin:0.8rem 0;z-index:2;">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 2px 10px rgba(139,26,26,0.3);">🧍</div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:160px;height:160px;border-radius:50%;border:1.5px dashed var(--beige);"></div>
+        <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);text-align:center;">
+          <div style="font-size:20px;">👶</div>
+          <div style="font-size:7px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:2px;">keponakan</div>
+        </div>
+        <div style="position:absolute;top:50%;right:10px;transform:translateY(-50%);text-align:center;">
+          <div style="font-size:20px;">🫂</div>
+          <div style="font-size:7px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:2px;">orang-orang</div>
+        </div>
+        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);text-align:center;">
+          <div style="font-size:20px;">🫶</div>
+          <div style="font-size:7px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:2px;">termasuk aku</div>
+        </div>
+      </div>
+      <div class="love-body">
+        keponakanmu nempel terus ke kamu.<br>anak kecil ga bohong —<br>mereka tau siapa yang<br><span style="color:var(--red);">aman untuk deket.</span>
+      </div>
+      <div class="pg-stamp">p. 3</div>
+    </div>
+    <div class="page page-r">
+      <div class="thing-tag">#thing<span class="n">3</span></div>
+      <div class="love-head">i love how you're just... you</div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin:0.8rem 0;position:relative;z-index:2;">
+        <div style="max-width:54%;background:#fff;border:1.5px solid var(--beige);border-radius:14px 14px 14px 4px;overflow:hidden;box-shadow:1px 2px 6px rgba(0,0,0,0.1);">
+          <video src="images/Video_2.mp4" autoplay loop muted playsinline style="width:100%;aspect-ratio:9/16;object-fit:cover;display:block;"></video>
+        </div>
+        <div class="bubble-right">i love it when you always keep me updated no matter what.</div>
+        <div class="bubble-right">aku suka gimana kamu ceritain apapun ke aku:D</div>
+      </div>
+      <div class="love-body" style="border-left:2px solid var(--dusty);padding-left:8px;">
+        <br><span style="color:var(--red);"></span>
+      </div>
+      <div class="pg-stamp">p. 4</div>
+    </div>
+  </div>
+
+  <!-- SPREAD 2 -->
+  <div class="spread" id="s2">
+    <div class="page page-l">
+      <div class="thing-tag">#thing<span class="n">4</span></div>
+      <div class="love-head">i love how you just... know</div>
+      <div class="sticky-grid">
+        <div class="sticky sticky-yellow" style="transform:rotate(-2deg);">
+          <div class="sticky-label">warm patch 🌡️</div>waktu aku kram<br>dia langsung beliin.
+        </div>
+        <div class="sticky sticky-pink" style="transform:rotate(1.5deg);">
+          <div class="sticky-label">jaketnya 🧥</div>aku kedinginan.<br>dia langsung lepas jaket.
+        </div>
+        <div class="sticky sticky-blue" style="transform:rotate(-1deg);">
+          <div class="sticky-label">tali sepatu 👟</div>copot. dia iketin.<br>simple. berasa banget.
+        </div>
+        <div class="sticky sticky-green" style="transform:rotate(2deg);">
+          <div class="sticky-label">udah makan? 🍚</div>tiap hari. tanpa skip.
+        </div>
+      </div>
+      <div class="love-body" style="text-align:center;margin-top:0.6rem;">
+        <span style="color:var(--red);">aku bahkan ga minta.</span><br>kamu cuma tau.
+      </div>
+      <div class="pg-stamp">p. 5</div>
+    </div>
+    <div class="page page-r">
+      <div class="thing-tag">#thing<span class="n">5</span></div>
+      <div class="love-head">i love our undocumented moments</div>
+      <div style="position:relative;margin:0.4rem 0;">
+        <div class="photo-frame" style="width:55%;aspect-ratio:9/16;border-radius:2px;margin:0 auto;overflow:hidden;position:relative;">
+          <img src="images/Images_4.jpeg" alt="foto" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        </div>
+        <div class="tape" style="top:-7px;left:32%;transform:rotate(1.5deg);width:52px;height:14px;border-radius:2px;"></div>
+      </div>
+      <div class="love-body" style="margin-top:0.5rem;font-size:8.5px;line-height:1.8;">
+        ga ada foto berdua yang bagus.<br>yang ada cuma ini.<br><span style="color:var(--red);">somehow ini yang paling aku suka.</span>
+      </div>
+      <div class="pg-stamp">p. 6</div>
+    </div>
+  </div>
+
+  <!-- SPREAD 3 — wide -->
+  <div class="spread-wide" id="s3">
+    <div class="spine-line" style="position:absolute;left:50%;top:0;bottom:0;width:6px;background:linear-gradient(to right,rgba(0,0,0,0.08),transparent);z-index:5;"></div>
+    <div class="wide-inner">
+      <div class="wide-thing-tag">#thing<span class="n">6</span></div>
+      <div class="photo-frame" style="width:100%;aspect-ratio:16/9;border-radius:3px;border-width:4px;position:relative;overflow:hidden;">
+        <video src="images/Video_1.mp4" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+      </div>
+      <div class="dot-rule"><span></span></div>
+      <div style="text-align:center;">
+        <div class="love-head" style="text-align:center;font-size:11px;">i love every single memory we've made together</div>
+        <div class="love-body" style="margin-top:4px;">because every one of them has you in it.</div>
+      </div>
+    </div>
+    <div class="pg-stamp" style="position:absolute;">p. 7–8</div>
+  </div>
+
+  <!-- SPREAD 4 — thing 7 & 8 -->
+  <div class="spread" id="s4">
+
+    <!-- THING 7 — MUSIC PLAYER -->
+    <div class="page page-l">
+      <div class="thing-tag">#thing<span class="n">7</span></div>
+      <div class="love-head">i love our songs</div>
+
+      <audio id="softLany" src="audio/soft_lany.mp3" preload="auto"></audio>
+
+      <div style="margin:0.8rem 0;position:relative;z-index:2;">
+        <div id="playerCard" onclick="togglePlay()">
+
+          <!-- Album art -->
+          <div style="width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;position:relative;background:linear-gradient(135deg,#d9b4b4,#c47a7a,#8B1A1A);display:flex;align-items:center;justify-content:center;">
+            <div id="vinylDisc">
+              <div style="width:26%;aspect-ratio:1;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;">
+                <div style="width:40%;aspect-ratio:1;border-radius:50%;background:#8B1A1A;"></div>
+              </div>
+            </div>
+            <div id="playOverlay">
+              <div id="playBtn">
+                <div id="pulseRing"></div>
+                <span id="playIcon">▶</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Song info -->
+          <div style="text-align:center;margin-top:10px;">
+            <div style="font-weight:bold;font-size:11px;color:var(--text);font-family:'Space Mono',monospace;">Soft</div>
+            <div style="font-size:8px;color:var(--muted);margin-top:2px;font-family:'Space Mono',monospace;">LANY</div>
+          </div>
+
+          <!-- Progress bar -->
+          <div id="progressWrap" style="margin-top:10px;height:3px;background:var(--beige);border-radius:99px;overflow:hidden;">
+            <div id="progressBar" style="height:100%;width:0%;background:var(--red);border-radius:99px;transition:width 0.5s linear;"></div>
+          </div>
+
+          <!-- Time -->
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <span id="curTime" style="font-size:7px;font-family:'Space Mono',monospace;color:var(--muted);">0:00</span>
+            <span id="durTime" style="font-size:7px;font-family:'Space Mono',monospace;color:var(--muted);">--:--</span>
+          </div>
+
+        </div>
+
+        <div id="tapHint" style="text-align:center;margin-top:6px;font-size:8px;font-family:'Space Mono',monospace;color:var(--dusty);letter-spacing:0.5px;">✦ klik untuk play ✦</div>
+      </div>
+
+      <div class="love-body" style="font-size:9px;line-height:1.8;text-align:center;">
+        <br><span style="color:var(--red);"></span>
+      </div>
+      <div class="pg-stamp">p. 9</div>
+    </div>
+
+    <!-- THING 8 -->
+    <div class="page page-r" style="position:relative;">
+      <div class="thing-tag">#thing<span class="n">8</span></div>
+      <div class="love-head">i love our little adventures</div>
+
+      <!-- spacer -->
+      <div style="height:0.9rem;"></div>
+
+      <!-- TICKET — creative redesign -->
+      <div style="display:flex;justify-content:center;position:relative;z-index:2;">
+        <div style="width:88%;transform:rotate(-1.5deg);filter:drop-shadow(3px 5px 10px rgba(0,0,0,0.22));position:relative;">
+
+          <!-- tape on ticket -->
+          <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(2deg);width:48px;height:13px;background:rgba(255,228,120,0.6);border:1px solid rgba(200,165,60,0.3);border-radius:2px;z-index:10;"></div>
+
+          <!-- ticket body -->
+          <div style="background:var(--red);border-radius:8px 8px 0 0;padding:10px 14px 0;color:white;position:relative;overflow:hidden;">
+
+            <!-- bg texture lines -->
+            <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(255,255,255,0.03) 6px,rgba(255,255,255,0.03) 7px);pointer-events:none;"></div>
+
+            <!-- header row -->
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;position:relative;z-index:1;">
+              <div>
+                <div style="font-size:5.5px;font-family:'Space Mono',monospace;letter-spacing:1.5px;opacity:0.7;text-transform:uppercase;">boarding pass</div>
+                <div style="font-family:'DM Serif Display',serif;font-size:19px;letter-spacing:0.5px;line-height:1.1;">ADMIT TWO</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:5.5px;font-family:'Space Mono',monospace;letter-spacing:1px;opacity:0.7;">VALID FOR</div>
+                <div style="font-size:9px;font-family:'Space Mono',monospace;font-weight:700;">∞ trips</div>
+              </div>
+            </div>
+
+            <!-- route row -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;position:relative;z-index:1;">
+              <div style="text-align:center;">
+                <div style="font-family:'DM Serif Display',serif;font-size:15px;font-style:italic;">HERE</div>
+                <div style="font-size:5.5px;font-family:'Space Mono',monospace;opacity:0.65;letter-spacing:0.5px;">origin</div>
+              </div>
+              <div style="flex:1;text-align:center;font-size:10px;opacity:0.7;letter-spacing:2px;">✈ · · · · ·</div>
+              <div style="text-align:center;">
+                <div style="font-family:'DM Serif Display',serif;font-size:15px;font-style:italic;">ANYWHERE</div>
+                <div style="font-size:5.5px;font-family:'Space Mono',monospace;opacity:0.65;letter-spacing:0.5px;">destination</div>
+              </div>
+            </div>
+
+            <!-- passenger row -->
+            <div style="border-top:1px dashed rgba(255,255,255,0.3);padding:6px 0 10px;display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1;">
+              <div>
+                <div style="font-size:5.5px;font-family:'Space Mono',monospace;opacity:0.65;letter-spacing:1px;text-transform:uppercase;">passenger</div>
+                <div style="font-size:8px;font-family:'DM Serif Display',serif;font-style:italic;">you + me</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:5.5px;font-family:'Space Mono',monospace;opacity:0.65;letter-spacing:1px;">CLASS</div>
+                <div style="font-size:8px;font-family:'Space Mono',monospace;">ALWAYS</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ticket tear line + stub -->
+          <div style="background:var(--red-dark);display:flex;align-items:center;position:relative;overflow:visible;">
+            <!-- left notch -->
+            <div style="width:10px;height:10px;border-radius:0 50% 50% 0;background:var(--cream2);flex-shrink:0;margin-left:-1px;"></div>
+            <!-- dashed line -->
+            <div style="flex:1;border-top:1.5px dashed rgba(255,255,255,0.35);margin:0 2px;"></div>
+            <!-- right notch -->
+            <div style="width:10px;height:10px;border-radius:50% 0 0 50%;background:var(--cream2);flex-shrink:0;margin-right:-1px;"></div>
+          </div>
+
+          <!-- stub -->
+          <div style="background:var(--red-dark);border-radius:0 0 8px 8px;padding:6px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:7px;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.6);letter-spacing:0.5px;">NO. 0001</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.55);">🎟️</div>
+            <div style="font-size:7px;font-family:'Space Mono',monospace;color:rgba(255,255,255,0.6);letter-spacing:0.5px;">NON-REFUNDABLE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- caption -->
+      <div class="love-body" style="font-size:8.5px;line-height:1.8;text-align:center;margin-top:1rem;margin-bottom:0.6rem;">
+        Mau itu jalan jauh atau cuma keliling kota cari makan,<br>
+        <span style="color:var(--red);">as long as it's with you, I'm in.</span>
+      </div>
+
+      <!-- mini adventure stamps -->
+      <div style="display:flex;justify-content:center;gap:6px;position:relative;z-index:2;">
+        <div style="background:rgba(139,26,26,0.08);border:1px solid rgba(139,26,26,0.2);border-radius:4px;padding:4px 7px;text-align:center;transform:rotate(-2.5deg);">
+          <div style="font-size:13px;">🍜</div>
+          <div style="font-size:5.5px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:2px;">cari makan</div>
+        </div>
+        <div style="background:rgba(139,26,26,0.08);border:1px solid rgba(139,26,26,0.2);border-radius:4px;padding:4px 7px;text-align:center;transform:rotate(1deg);">
+          <div style="font-size:13px;">🚗</div>
+          <div style="font-size:5.5px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:2px;">road trip</div>
+        </div>
+        <div style="background:rgba(139,26,26,0.08);border:1px solid rgba(139,26,26,0.2);border-radius:4px;padding:4px 7px;text-align:center;transform:rotate(-1deg);">
+          <div style="font-size:13px;">🌇</div>
+          <div style="font-size:5.5px;font-family:'Space Mono',monospace;color:var(--muted);margin-top:2px;">keliling kota</div>
+        </div>
+      </div>
+
+      <div style="position:absolute;bottom:28px;left:14px;font-size:9px;color:var(--dusty);opacity:0.5;font-family:'DM Serif Display',serif;font-style:italic;">✦ &nbsp; ✦ &nbsp; ✦</div>
+      <div class="pg-stamp">p. 10</div>
+    </div>
+  </div>
+
+  <!-- SPREAD 5 -->
+  <div class="spread" id="s5">
+    <div class="page page-l" style="position:relative;">
+      <div class="thing-tag">#thing<span class="n">9</span></div>
+      <div class="love-head">i love the way you talk to me</div>
+
+      <!-- chat timestamp -->
+      <div style="text-align:center;margin:0.5rem 0 0.7rem;font-size:7px;font-family:'Space Mono',monospace;color:var(--beige);letter-spacing:0.5px;">today · 💬</div>
+
+      <!-- VN chat bubbles -->
+      <div style="display:flex;flex-direction:column;gap:8px;position:relative;z-index:2;" id="vnChat">
+
+        <!-- VN 1 -->
+        <div style="display:flex;align-items:flex-end;gap:6px;">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--red);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;">🧑</div>
+          <div class="vn-bubble" onclick="playVN(0)" data-vn="0" style="background:#fff;border:1px solid var(--tan);border-radius:14px 14px 14px 3px;padding:7px 10px;cursor:pointer;flex:1;box-shadow:1px 2px 6px rgba(0,0,0,0.08);transition:background 0.2s;">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <div class="vn-play-btn" style="width:22px;height:22px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span class="vn-icon" style="color:white;font-size:8px;margin-left:1px;">▶</span>
+              </div>
+              <div style="flex:1;">
+                <div class="vn-wave" style="display:flex;align-items:center;gap:2px;height:18px;">
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:4px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:9px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:14px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:7px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:12px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:5px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:10px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:16px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:8px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:11px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:6px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:13px;"></span>
+                </div>
+              </div>
+              <div style="font-size:6.5px;font-family:'Space Mono',monospace;color:var(--beige);white-space:nowrap;" class="vn-dur">1:25</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VN 2 -->
+        <div style="display:flex;align-items:flex-end;gap:6px;">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--red);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;">🧑</div>
+          <div class="vn-bubble" onclick="playVN(1)" data-vn="1" style="background:#fff;border:1px solid var(--tan);border-radius:14px 14px 14px 3px;padding:7px 10px;cursor:pointer;flex:1;box-shadow:1px 2px 6px rgba(0,0,0,0.08);transition:background 0.2s;">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <div class="vn-play-btn" style="width:22px;height:22px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span class="vn-icon" style="color:white;font-size:8px;margin-left:1px;">▶</span>
+              </div>
+              <div style="flex:1;">
+                <div class="vn-wave" style="display:flex;align-items:center;gap:2px;height:18px;">
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:10px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:5px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:13px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:8px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:16px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:6px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:11px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:4px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:14px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:9px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:7px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:12px;"></span>
+                </div>
+              </div>
+              <div style="font-size:6.5px;font-family:'Space Mono',monospace;color:var(--beige);white-space:nowrap;" class="vn-dur">0:20</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VN 3 -->
+        <div style="display:flex;align-items:flex-end;gap:6px;">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--red);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;">🧑</div>
+          <div class="vn-bubble" onclick="playVN(2)" data-vn="2" style="background:#fff;border:1px solid var(--tan);border-radius:14px 14px 14px 3px;padding:7px 10px;cursor:pointer;flex:1;box-shadow:1px 2px 6px rgba(0,0,0,0.08);transition:background 0.2s;">
+            <div style="display:flex;align-items:center;gap:7px;">
+              <div class="vn-play-btn" style="width:22px;height:22px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span class="vn-icon" style="color:white;font-size:8px;margin-left:1px;">▶</span>
+              </div>
+              <div style="flex:1;">
+                <div class="vn-wave" style="display:flex;align-items:center;gap:2px;height:18px;">
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:7px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:14px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:5px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:11px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:16px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:8px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:13px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:4px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:10px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:6px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:15px;"></span>
+                  <span class="vn-bar" style="width:2px;background:var(--dusty);border-radius:99px;height:9px;"></span>
+                </div>
+              </div>
+              <div style="font-size:6.5px;font-family:'Space Mono',monospace;color:var(--beige);white-space:nowrap;" class="vn-dur">0:39</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- caption below -->
+      <div class="love-body" style="font-size:8.5px;line-height:1.85;margin-top:1rem;border-left:2px solid var(--dusty);padding-left:8px;">
+        aku suka kalau dia ngomong ke aku —<br>
+        <span style="color:var(--red);">nadanya yang lembut itu</span><br>
+        bikin semuanya berasa oke.
+      </div>
+
+      <!-- decorative -->
+      <div style="position:absolute;bottom:26px;right:14px;font-size:8px;color:var(--dusty);opacity:0.45;font-family:'DM Serif Display',serif;font-style:italic;">saved forever ♡</div>
+
+      <div class="pg-stamp">p. 11</div>
+    </div>
+    <div class="page page-r">
+      <div class="thing-tag">#thing<span class="n">10</span></div>
+      <div class="love-head">i love that you're you</div>
+      <div style="position:relative;margin:0.8rem 0;z-index:2;">
+        <div class="photo-frame" style="width:65%;aspect-ratio:3/4;border-radius:2px;margin:0 auto;overflow:hidden;position:relative;transform:rotate(2.5deg);">
+          <img src="images/Images_5.jpeg" alt="foto" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        </div>
+        <div class="tape" style="top:-8px;left:45%;transform:translateX(-50%) rotate(-3deg);width:55px;height:14px;border-radius:2px;"></div>
+      </div>
+      <div class="love-body" style="font-size:8.5px;line-height:1.8;text-align:center;position:relative;z-index:2;">
+        Out of everyone in the world,<br>
+        I got to know <strong style="color:var(--red);">YOU</strong>.<br><br>
+        What a lucky, lucky thing.
+      </div>
+      <div class="pg-stamp">p. 12</div>
+    </div>
+  </div>
+
+  <!-- SPREAD 6 — letter + back -->
+  <div class="spread" id="s6">
+    <div class="page page-l" style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:3rem;">
+      <div style="font-size:8px;font-family:'Space Mono',monospace;color:var(--dusty);letter-spacing:1px;position:absolute;top:2rem;text-align:center;width:100%;z-index:2;">✦ ada sesuatu untukmu ✦</div>
+
+      <div id="envContainer" style="position:relative;width:220px;height:130px;z-index:2;">
+        <div id="letterScroll" style="position:absolute;bottom:5px;left:8px;right:8px;transform:translateY(0);transition:transform 0.6s cubic-bezier(0.4,0,0.2,1),opacity 0.4s;opacity:0;pointer-events:none;z-index:1;">
+          <div style="background:#fffef8;border:1px solid var(--beige);border-radius:4px;padding:14px 12px 10px;box-shadow:0 -2px 10px rgba(0,0,0,0.05);background-image:repeating-linear-gradient(transparent,transparent 18px,rgba(201,185,154,0.28) 19px);background-position:0 6px;">
+            <div class="letter-content">
+              <div style="text-align:center;margin-bottom:0.6rem;">
+                <span style="font-family:'DM Serif Display',serif;font-size:11px;color:var(--red);font-style:italic;">untuk kamu,</span>
+              </div>
+              <div style="font-family:'Space Mono',monospace;font-size:7.5px;color:var(--muted);line-height:1.75;">
+                <p style="margin-bottom:8px;">dari training di ruko, sampe jadi satu tempat kerja, trus ikuy lomba bareng — aku ga nyangka semua itu bisa bawa kita sampe sini.</p>
+                <p style="margin-bottom:8px;">baru 5 bulan kita pacaran tapi aku seneng banget bisa kenal kamu, bisa deket, bisa jadi bagian dari hari-hari kamuu.</p>
+                <p style="margin-bottom:8px;">aku seneng kalau bisa bantu kamu. aku sayang kamu, bener-bener sayang.</p>
+                <p style="margin-bottom:8px;color:var(--red);">terima kasih udah ngejalanin semuanya sampai sekarang. Meski aku tau ga gampang dan berat — kamu masih di sini. itu bukan hal kecil.</p>
+                <p style="margin-bottom:8px;">aku harap semoga lebih bahagia di umur yang baru ini ya. Aku harap ku bisa terus nemenin kamu — sampai tahun-tahun selanjutnya hehe. Love youu</p>
+                <div style="text-align:right;margin-top:0.8rem;">
+                  <span style="font-family:'DM Serif Display',serif;font-size:9px;color:var(--muted);font-style:italic;">with all my love ♡</span>
+                </div>
+              </div>
+            </div>
+            <div onclick="toggleEnvelope()" style="text-align:center;margin-top:8px;padding-top:8px;border-top:1px dashed var(--beige);cursor:pointer;">
+               <span style="font-size:6.5px;font-family:'Space Mono',monospace;color:var(--red);text-transform:uppercase;letter-spacing:0.5px;">⬇ klik untuk menyimpan surat ⬇</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="envBox" onclick="toggleEnvelope()" style="cursor:pointer;width:100%;height:100%;position:absolute;bottom:0;left:0;z-index:2;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="position:absolute;inset:0;background:#c47a7a;border-radius:0 0 6px 6px;box-shadow:0 6px 18px rgba(0,0,0,0.18);">
+            <svg viewBox="0 0 220 130" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:0 0 6px 6px;">
+              <polygon points="0,0 0,130 110,65" fill="#a85e5e" opacity="0.4"/>
+              <polygon points="220,0 220,130 110,65" fill="#a85e5e" opacity="0.4"/>
+              <polygon points="0,130 220,130 110,65" fill="#b06868" opacity="0.5"/>
+            </svg>
+          </div>
+          <div id="envFlap" style="position:absolute;top:0;left:0;width:100%;transform-origin:top center;transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);z-index:4;">
+            <svg viewBox="0 0 220 85" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+              <polygon points="0,0 220,0 110,85" fill="#c47a7a"/>
+            </svg>
+            <div id="envSeal" style="position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:var(--red);color:white;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.25);transition:opacity 0.3s;">♡</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="envHint" style="text-align:center;font-size:8px;font-family:'Space Mono',monospace;color:var(--dusty);margin-top:1rem;letter-spacing:0.5px;transition:opacity 0.3s;">klik amplop untuk membuka</div>
+      <div class="pg-stamp">p. 13</div>
+    </div>
+
+    <div class="page-back">
+      <div style="font-size:44px;margin-bottom:1.6rem;">🎀</div>
+      <div class="back-text">
+        happy birthday,<br>
+        sayang.<br><br>
+        <span style="font-size:13px;opacity:0.62;font-style:italic;">here's to you — always.</span>
+      </div>
+      <button class="close-btn" onclick="closeBook()">↩ tutup buku</button>
+    </div>
+  </div> <!-- end spread 6 -->
+
+    </div> <!-- end book-3d -->
+  </div> <!-- end book-3d-wrap -->
+
+  <div class="nav-row">
+    <button class="nav-btn" id="prevBtn" onclick="prevPage()" disabled>‹</button>
+    <span class="page-counter" id="counter">1 / 7</span>
+    <button class="nav-btn" id="nextBtn" onclick="nextPage()">›</button>
+  </div>
+
+</div>
+
+<script>
+  // ── ENVELOPE ──────────────────────────────────────────
+  function toggleEnvelope() {
+    const flap   = document.getElementById('envFlap');
+    const seal   = document.getElementById('envSeal');
+    const hint   = document.getElementById('envHint');
+    const letter = document.getElementById('letterScroll');
+    const envBox = document.getElementById('envBox');
+    const isOpen = flap.dataset.opened === '1';
+
+    if (!isOpen) {
+      flap.dataset.opened = '1';
+      flap.style.transform = 'rotateX(180deg)';
+      seal.style.opacity = '0';
+      hint.style.opacity = '0';
+      envBox.style.transform = 'translateY(0)';
+      envBox.onmouseover = null;
+      envBox.onmouseout = null;
+      setTimeout(() => {
+        letter.style.opacity = '1';
+        letter.style.pointerEvents = 'auto';
+        letter.style.transform = 'translateY(-145px)';
+      }, 350);
+    } else {
+      flap.dataset.opened = '0';
+      letter.style.transform = 'translateY(0)';
+      letter.style.opacity = '0';
+      letter.style.pointerEvents = 'none';
+      setTimeout(() => {
+        flap.style.transform = 'rotateX(0deg)';
+        seal.style.opacity = '1';
+        hint.style.opacity = '1';
+        envBox.onmouseover = function() { this.style.transform='translateY(-3px)'; };
+        envBox.onmouseout  = function() { this.style.transform='translateY(0)'; };
+      }, 500);
+    }
+  }
+
+  // ── MUSIC PLAYER ──────────────────────────────────────
+  let isPlaying = false;
+  const audio       = document.getElementById('softLany');
+  const vinyl       = document.getElementById('vinylDisc');
+  const playIcon    = document.getElementById('playIcon');
+  const pulseRing   = document.getElementById('pulseRing');
+  const progressBar = document.getElementById('progressBar');
+  const curTime     = document.getElementById('curTime');
+  const durTime     = document.getElementById('durTime');
+  const tapHint     = document.getElementById('tapHint');
+
+  function togglePlay() {
+    if (!audio) return;
+    if (isPlaying) {
+      audio.pause();
+      isPlaying = false;
+      playIcon.textContent = '▶';
+      vinyl.classList.remove('spinning');
+      pulseRing.classList.remove('pulsing');
+      tapHint.textContent = '✦ klik untuk play ✦';
+    } else {
+      audio.play().catch(() => {});
+      isPlaying = true;
+      playIcon.textContent = '⏸';
+      vinyl.classList.add('spinning');
+      pulseRing.classList.add('pulsing');
+      tapHint.textContent = '♪ now playing — Soft, LANY ♪';
+    }
+  }
+
+  function fmtTime(s) {
+    const m = Math.floor(s / 60);
+    return m + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  }
+
+  if (audio) {
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) {
+        progressBar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+        curTime.textContent = fmtTime(audio.currentTime);
+      }
+    });
+    audio.addEventListener('loadedmetadata', () => {
+      durTime.textContent = fmtTime(audio.duration);
+    });
+    audio.addEventListener('ended', () => {
+      isPlaying = false;
+      playIcon.textContent = '▶';
+      vinyl.classList.remove('spinning');
+      pulseRing.classList.remove('pulsing');
+      progressBar.style.width = '0%';
+      tapHint.textContent = '✦ klik untuk play ✦';
+    });
+  }
+
+  // ── BOOK NAVIGATION ───────────────────────────────────
+  let cur = 0;
+  const TOTAL = 7;
+  const WIDE_INDEX = 3;
+
+  function getEl(i) {
+    return document.getElementById(i === WIDE_INDEX ? 's3' : 's' + i);
+  }
+
+  function showSpread(i) {
+    for (let j = 0; j < TOTAL; j++) {
+      const el = getEl(j);
+      if (!el) continue;
+      el.classList.toggle('active', j === i);
+    }
+    document.getElementById('counter').textContent = (i + 1) + ' / ' + TOTAL;
+    document.getElementById('prevBtn').disabled = i === 0;
+    document.getElementById('nextBtn').disabled = i === TOTAL - 1;
+  }
+
+  function openBook() {
+    document.getElementById('cover-scene').style.display = 'none';
+    document.getElementById('book-scene').classList.add('open');
+    document.getElementById('ambient-player').classList.add('visible');
+    cur = 0;
+    showSpread(0);
+    // 3D open animation
+    const b = document.getElementById('book3d');
+    b.classList.remove('opening');
+    void b.offsetWidth;
+    b.classList.add('opening');
+    // autoplay ambient
+    setTimeout(() => {
+      if (ambAudio && !ambPlaying) toggleAmbient();
+    }, 600);
+  }
+
+  function closeBook() {
+    if (isPlaying && audio) {
+      audio.pause(); isPlaying = false;
+      playIcon.textContent = '▶';
+      vinyl.classList.remove('spinning');
+      pulseRing.classList.remove('pulsing');
+    }
+    // stop ambient
+    if (ambPlaying && ambAudio) {
+      ambAudio.pause(); ambPlaying = false;
+      document.getElementById('amb-disc').classList.remove('spinning');
+      document.getElementById('amb-bars').classList.remove('active');
+    }
+    document.getElementById('ambient-player').classList.remove('visible');
+    document.getElementById('cover-scene').style.display = 'flex';
+    document.getElementById('book-scene').classList.remove('open');
+    cur = 0;
+  }
+
+  function flashPageTurn() {
+    const fl = document.getElementById('pageTurnFlash');
+    fl.classList.remove('flash');
+    void fl.offsetWidth;
+    fl.classList.add('flash');
+  }
+
+  function nextPage() {
+    if (cur < TOTAL - 1) { cur++; showSpread(cur); flashPageTurn(); }
+  }
+  function prevPage() {
+    if (cur > 0) { cur--; showSpread(cur); flashPageTurn(); }
+  }
+
+  // ── AMBIENT MUSIC PLAYER ──────────────────────────────
+  // Replace 'audio/soft_lany.mp3' with your song path
+  let ambAudio = new Audio('audio/Shape of My Heart.mp3');
+    ambAudio.loop = true;
+    let ambPlaying = false;
+
+  function toggleAmbient() {
+    const disc = document.getElementById('amb-disc');
+    const bars = document.getElementById('amb-bars');
+    if (!ambAudio) return;
+    if (ambPlaying) {
+      ambAudio.pause();
+      ambPlaying = false;
+      disc.classList.remove('spinning');
+      bars.classList.remove('active');
+    } else {
+      ambAudio.play().catch(() => {});
+      ambPlaying = true;
+      disc.classList.add('spinning');
+      bars.classList.add('active');
+    }
+  }
+
+  ambAudio && ambAudio.addEventListener('ended', () => {
+    ambPlaying = false;
+    document.getElementById('amb-disc').classList.remove('spinning');
+    document.getElementById('amb-bars').classList.remove('active');
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') nextPage();
+    if (e.key === 'ArrowLeft')  prevPage();
+  });
+
+  // ── VOICE NOTE PLAYER ─────────────────────────────────
+  // Replace these src paths with your actual audio files:
+  // e.g. 'audio/vn1.mp3', 'audio/vn2.mp3', 'audio/vn3.mp3'
+  const vnSources = [
+    'audio/vn1.mp3',
+    'audio/vn2.mp3',
+    'audio/vn3.mp3',
+  ];
+
+  const vnAudios = vnSources.map(src => {
+    const a = new Audio(src);
+    return a;
+  });
+
+  let currentVN = -1;
+
+  function playVN(index) {
+    const bubbles = document.querySelectorAll('.vn-bubble');
+    const icons   = document.querySelectorAll('.vn-bubble .vn-icon');
+
+    if (currentVN === index) {
+      // toggle same VN
+      const a = vnAudios[index];
+      if (!a.paused) {
+        a.pause();
+        bubbles[index].classList.remove('playing');
+        icons[index].textContent = '▶';
+        currentVN = -1;
+      } else {
+        a.play().catch(() => {});
+        bubbles[index].classList.add('playing');
+        icons[index].textContent = '⏸';
+      }
+      return;
+    }
+
+    // stop previous
+    if (currentVN >= 0) {
+      vnAudios[currentVN].pause();
+      vnAudios[currentVN].currentTime = 0;
+      bubbles[currentVN].classList.remove('playing');
+      icons[currentVN].textContent = '▶';
+    }
+
+    // play new
+    currentVN = index;
+    vnAudios[index].currentTime = 0;
+    vnAudios[index].play().catch(() => {});
+    bubbles[index].classList.add('playing');
+    icons[index].textContent = '⏸';
+
+    vnAudios[index].onended = () => {
+      bubbles[index].classList.remove('playing');
+      icons[index].textContent = '▶';
+      currentVN = -1;
+    };
+  }
+</script>
+</body>
+</html>
